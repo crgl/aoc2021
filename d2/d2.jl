@@ -26,7 +26,23 @@ function p1(vals)
 end
 
 function p2(vals)
-    println("P2: ", "???")
+    hor = 0
+    vert = 0
+    aim = 0
+    for (dir, n) in vals
+        if dir == "forward"
+            hor += n
+            vert += aim * n
+        elseif dir == "down"
+            aim += n
+        elseif dir == "up"
+            aim -= n
+        else
+            println(dir, " is not supported")
+            exit(1)
+        end
+    end
+    println("P2: ", hor * vert)
 end
 
 function solve()
