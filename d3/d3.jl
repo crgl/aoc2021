@@ -3,13 +3,10 @@ function get_input()
     collect(parse.(Int, bitstring) for bitstring in collect.(bitstrings))
 end
 
-function p1(vals)
-    # We're going to do direct, fallible indexing
-    # This would break with poorly formatted input
-    slen = length(vals[1])
+function p1(vals, slen)
     sums = zeros(slen)
     for val in vals, i in range(1, slen)
-        @inbounds sums[i] += val[i]
+        sums[i] += val[i]
     end
     bools = sums.*2 .> ones(slen) * length(vals)
     gam = 0
@@ -24,8 +21,11 @@ function p1(vals)
     println("P1: ", gam * eps)
 end
 
-function p2(vals)
-    println("P2: ", "???")
+function p2(vals, slen)
+    oxy = 0
+    carb = 0
+    output = oxy * carb
+    println("P2: ", output)
 end
 
 function solve()
@@ -33,8 +33,9 @@ function solve()
     if length(vals) == 0
         exit(1)
     end
-    p1(vals)
-    p2(vals)
+    slen = length(vals[1])
+    p1(vals, slen)
+    p2(vals, slen)
 end
 
 solve()
