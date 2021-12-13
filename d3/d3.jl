@@ -1,6 +1,6 @@
 function get_input()
     bitstrings = readlines("input/input.txt")
-    collect(parse.(Int, bitstring) for bitstring in collect.(bitstrings))
+    collect(bitstring .== '1' for bitstring in collect.(bitstrings))
 end
 
 function p1(vals, slen)
@@ -22,8 +22,42 @@ function p1(vals, slen)
 end
 
 function p2(vals, slen)
+    tmp = vals
+    for i in range(1,slen)
+        n = length(tmp)
+        if n == 1
+            break
+        end
+        count = sum(getindex.(tmp, i))
+        desired = if count * 2 >= n
+            1
+        else
+            0
+        end
+        tmp = tmp[getindex.(tmp, i) .== desired]
+    end
     oxy = 0
+    for i in range(1, slen)
+        oxy += tmp[1][i] << (slen - i)
+    end
+    tmp = vals
+    for i in range(1,slen)
+        n = length(tmp)
+        if n == 1
+            break
+        end
+        count = sum(getindex.(tmp, i))
+        desired = if count * 2 >= n
+            0
+        else
+            1
+        end
+        tmp = tmp[getindex.(tmp, i) .== desired]
+    end
     carb = 0
+    for i in range(1, slen)
+        carb += tmp[1][i] << (slen - i)
+    end
     output = oxy * carb
     println("P2: ", output)
 end
