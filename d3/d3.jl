@@ -1,15 +1,17 @@
 function get_input()
-    readlines("input/input.txt")
+    bitstrings = readlines("input/input.txt")
+    collect(parse.(Int, bitstring) for bitstring in collect.(bitstrings))
 end
 
-function p1(vals, n, slen)
+function p1(vals)
     # We're going to do direct, fallible indexing
     # This would break with poorly formatted input
+    slen = length(vals[1])
     sums = zeros(slen)
     for val in vals, i in range(1, slen)
-        @inbounds sums[i] += parse(Int, val[i])
+        @inbounds sums[i] += val[i]
     end
-    bools = sums.*2 .> ones(slen) * n
+    bools = sums.*2 .> ones(slen) * length(vals)
     gam = 0
     eps = 0
     for (i, b) in enumerate(bools)
@@ -28,15 +30,10 @@ end
 
 function solve()
     vals = get_input()
-    n = length(vals) # number of vals
-    slen = if n > 0
-        length(vals[1])
-    else
-        print("P1: 0??")
+    if length(vals) == 0
         exit(1)
-        n
     end
-    p1(vals, n, slen)
+    p1(vals)
     p2(vals)
 end
 
