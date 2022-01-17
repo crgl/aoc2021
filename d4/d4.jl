@@ -79,26 +79,54 @@ function p1(calls, boards, locs)
             end
         end
         if done != 0
-            println(tokens[done])
-            println(boards[done])
-            println(counts[done])
-            println(call)
             return sum(tokens[done] .* boards[done]) * call
         end
     end
     return "???"
 end
 
-function p2(vals)
-    output = "???"
-    println("P2: ", output)
+function p2(calls, boards, locs)
+    tokens = [ones(Bool, 5, 5) for _ in boards]
+    counts = [ones(Int64, 3, 5) .* 5 for _ in boards]
+    finished = Set()
+    num_boards = length(boards)
+    final = 0
+    for call in calls
+        if call in keys(locs)
+            for (idx, i, j) in locs[call]
+                if length(finished) != num_boards
+                    final = idx
+                end
+                tokens[idx][i, j] = 0
+                counts[idx][1, i] -= 1
+                if counts[idx][1, i] == 0
+                    push!(finished, idx)
+                end
+                counts[idx][2, j] -= 1
+                if counts[idx][2, j] == 0
+                    push!(finished, idx)
+                end
+                for k in pos_to_diag(i, j)
+                    counts[idx][3, k] -= 1
+                    if counts[idx][3, k] == 0
+                        push!(finished, idx)
+                    end
+                end
+            end
+        end
+        if length(finished) == num_boards
+            return sum(tokens[final] .* boards[final]) * call
+        end
+    end
+    return "???"
 end
 
 function solve()
     calls, boards, locs = get_input()
     o1 = p1(calls, boards, locs)
     println("P1: ", o1)
-    p2(calls)
+    o2 = p2(calls, boards, locs)
+    println("P2: ", o2)
 end
 
 solve()
