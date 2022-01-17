@@ -5,11 +5,6 @@ function get_input()
     for (i, line) in enumerate(lines)
         segment = parse.(Int64, vcat(split.(split(line, " -> "), ",")...))
         vents[i] = segment
-        # p1, p2 = split(line, " -> ")
-        # p1 = parse.(Int64, split(p1, ","))
-        # p2 = parse.(Int64, split(p2, ","))
-        # println(p1)
-        # println(p2)
     end
     vents
 end
