@@ -57,18 +57,24 @@ function get_input()
         mapping[7] = unique_digits[2]
         mapping[4] = unique_digits[3]
         for digit in unique_digits[7:9]
+            if length(digit) != 6
+                exit(1)
+            end
             if length(union(digit, mapping[7])) != length(digit)
                 mapping[6] = digit
-            elseif length(union(digit, mapping[7], mapping[4])) != length(digit)
+            elseif length(union(digit, mapping[4])) != length(digit)
                 mapping[0] = digit
             else
                 mapping[9] = digit
             end
         end
         for digit in unique_digits[4:6]
+            if length(digit) != 5
+                exit(1)
+            end
             if length(union(digit, mapping[7])) == length(digit)
                 mapping[3] = digit
-            elseif length(union(digit, mapping[9])) == 7
+            elseif length(union(digit, mapping[9])) == length(mapping[9])
                 mapping[5] = digit
             else
                 mapping[2] = digit
@@ -81,7 +87,7 @@ function get_input()
                     return val[1]
                 end
             end
-            println("Error! Gracefully exiting")
+            println("Error! Semi-gracefully exiting")
             println(mapping)
             println(values)
             exit(1)
@@ -105,18 +111,13 @@ function p1(displays)
     println("P1: ", output)
 end
 
-# Part 2 has more going on. We're now weighting further points much higher
-# In fact... I think before we wanted to choose the median and now we want the mean?
-# This is a whole error vs squared error thing. Let's spot check that first.
-# Squares with the median. So I believe we should be able to just calculate the value at the mean
-# although specifically, right... it's the sum from 1 to n, which is n * (n + 1) / 2. works for me!
-# Tempting to just round, but let's check floor and ceiling first
-# As we should have! Rounding was not quite the answer, I am surprised to say
-# Well, not that surprised as I checked, but it is not quite squared error in any case
-# Also I had initially forgotten absolute values, like a fool
-
-function p2(vals)
+function p2(displays)
     output::Int128 = 0
+    for display in displays
+        for (i, val) in enumerate(reverse(display))
+            output += exp10(i - 1) * val
+        end
+    end
     println("P2: ", output)
 end
 
